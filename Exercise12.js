@@ -81,22 +81,23 @@ function Ex12() {
 	// ];
 
 //Array of objects with ID, Title, Boxart Url
-return movieLists.map(function(vids) {
-  return vids.videos.map(function(el) {
-    var obj = {};
-		obj.id = el.id;
-    obj.title = el.title;
-    el.boxarts.filter(function(index) {
-      if (index.width === 150) {
-        obj.boxart = index.url;
-      }
-    });
-    return obj;
-  });
-}).concatAll();
-
+return movieLists.map(function (vids) {
+    return vids.videos.map(function (el) {
+        return el.boxarts.filter(function (index) {
+            return index.width === 150;
+          })
+          .map(function (items) {
+            return {
+              id: el.id,
+              title: el.title,
+              boxart: items.url
+            };
+          });
+      })
+      .concatAll();
+  })
+  .concatAll();
 
 }
-
 
 console.log(Ex12());
