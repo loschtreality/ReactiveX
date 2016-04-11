@@ -154,10 +154,10 @@ function Ex20() {
 				var obj = {};
 				obj.id = items.id;
 				obj.title = items.title;
-				obj.boxart = items.boxarts.reduce(function(prev,curr){
+				items.boxarts.reduce(function(prev,curr){
 					return prev.width < curr.width ? prev : curr;
 				}).map(function(box){
-					return box.url;
+					obj.boxart = box.url;
 				});
 				return obj;
 			});
