@@ -150,16 +150,16 @@ function Ex20() {
 
 	return movieLists.
 		concatMap(function(movieList) {
-			return movieList.videos.map(function(items){
-				var obj = {};
-				obj.id = items.id;
-				obj.title = items.title;
-				items.boxarts.reduce(function(prev,curr){
-					return prev.width < curr.width ? prev : curr;
+			return movieList.videos.concatMap(function(items){
+				return items.boxarts.reduce(function(prev,curr){
+					return (prev.width * prev.height) < (curr.width * curr.height) ? prev : curr;
 				}).map(function(box){
+					var obj = {};
+					obj.id = items.id;
+					obj.title = items.title;
 					obj.boxart = box.url;
+					return obj;
 				});
-				return obj;
 			});
 		});
 
