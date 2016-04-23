@@ -180,19 +180,30 @@ function Ex24() {
 
   return movieLists.
 		concatMap(function(movieList) {
-      return movieList.videos.zip(
-          //array 1
-        movieList.videos.filter(function(types){
-        return types.type === "Middle";
-      }),
-          //array 2
-        movieList.videos.reduce(function(prev,curr){
-          return (prev.width > curr.width) ? prev : curr;
-        }),
-        //callback
-        function (left,right) {
-          return left + right;
-        })
+      return movieList.videos.map(function(el){
+				var obj = {}
+				obj.id = el.id;
+				obj.title = el.title;
+				var midMoments = el.interestingMoments.filter(function(section){
+					return section.type === "Middle";
+				});
+				var smallBox = el.boxarts.reduce(function(prev,curr){
+					return (prev.width < curr.width) ? prev : curr;
+				})
+				//console.log(smallBox,'smallbox');
+				var time = Array.zip(
+					//interesting middle moments (left)
+					midMoments,
+					// small boxarts (right)
+					smallBox,
+					//Callback function
+					function(left,right) {
+						obj.time = left.time;
+						obj.url = right.url;
+					}
+				);
+				return obj;
+			})
 
 		});
 
