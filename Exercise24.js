@@ -180,31 +180,23 @@ function Ex24() {
 
   return movieLists.
 		concatMap(function(movieList) {
-      return movieList.videos.map(function(el){
-				var obj = {}
-				obj.id = el.id;
-				obj.title = el.title;
-				var midMoments = el.interestingMoments.filter(function(section){
-					return section.type === "Middle";
+      return movieList.videos.concatMap(function(video){
+				var box_arts = video.boxarts.reduce(function(prev,curr){
+					return ((prev.width * prev.height) > (curr.width * curr.height)) ? prev : curr;
 				});
-				var smallBox = el.boxarts.reduce(function(prev,curr){
-					return (prev.width < curr.width) ? prev : curr;
-				})
-				//console.log(smallBox,'smallbox');
-				var time = Array.zip(
-					//interesting middle moments (left)
-					midMoments,
-					// small boxarts (right)
-					smallBox,
-					//Callback function
-					function(left,right) {
-						obj.time = left.time;
-						obj.url = right.url;
+				var moments = video.interestingMoments.filter(function(spot){
+					return spot.type === "Middle";
+				});
+				return Array.zip(
+					// Left parameter
+					box_arts,
+					// Right parameter
+					moments,
+					function(arts,interestingMoment){
+						return {id: video.id, title: video.title, time: interestingMoment.time, url: arts.url}
 					}
-				);
-				return obj;
+				)
 			})
-
 		});
 
 }
