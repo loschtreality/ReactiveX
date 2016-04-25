@@ -162,18 +162,20 @@ function Ex25() {
 		];
 
 	return lists.concatMap(function(elements){
-		var tree = [];
-		var video_obj = {};
-		var vid_info = elements.videos.map(function(items){
-			return {id: items.id, title: items.title};
+		var list_types = elements.name;
+		var video_info = videos.map(function(items){
+			return {id: items.id, title: items.title}
 		});
-		var vid_names = elements.lists.map(function(titles){
-			return titles.name;
-		})
-		video_obj["name"] = vid_info
-		video_obj["videos"] = vid_info;
-		tree.push(video_obj);
-		return tree;
+		return Array.zip(
+			// Array left
+			list_types,
+			//Array right
+			video_info,
+			//Callback function
+			function (left,right) {
+				return {name: list_types, videos:right}
+			}
+		)
 	}) // complete this expression
 }
 
