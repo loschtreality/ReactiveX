@@ -161,22 +161,14 @@ function Ex25() {
 			}
 		];
 
-	return lists.concatMap(function(elements){
-		var list_types = elements.name;
-		var video_info = videos.map(function(items){
-			return {id: items.id, title: items.title}
+	return lists.map(function(listVid){
+		match_video = videos.filter(function(vids){
+			return vids.listId === listVid.id;
+		}).map(function(info){
+			return {id: info.id, title: info.title};
 		});
-		return Array.zip(
-			// Array left
-			list_types,
-			//Array right
-			video_info,
-			//Callback function
-			function (left,right) {
-				return {name: list_types, videos:right}
-			}
-		)
-	}) // complete this expression
+		return {name: listVid.name, videos: match_video}
+	});
 }
 
 console.log(Ex25());
