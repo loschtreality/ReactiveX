@@ -187,37 +187,33 @@ function Ex26() {
 			{ videoId: 654356453, time: 984934 }
 		];
 
-	return lists.map(function(genres){
-
-		//Videos
-
-		matched_videos = videos.filter(function(list_match){
-			return list_match.listId === genres.id;
+		return lists.map(function(list) {
+			return {
+				name: list.name,
+				videos:
+					videos.
+						filter(function(video) {
+							return video.listId === list.id;
+						}).
+						concatMap(function(video) {
+							return Array.zip(
+								bookmarks.filter(function(bookmark) {
+									return bookmark.videoId === video.id;
+								}),
+								boxarts.filter(function(boxart) {
+									return boxart.videoId === video.id;
+								}).
+								reduce(function(acc,curr) {
+									return acc.width * acc.height < curr.width * curr.height ? acc : curr;
+								}),
+								function(bookmark, boxart) {
+									return { id: video.id, title: video.title, time: bookmark.time, boxart: boxart.url };
+								});
+					})
+			};
 		});
-
-		//Boxarts
-		min_boxarts = boxarts.reduce(function(prev,curr) {
-			return (prev.width * prev.height) < (curr.width * curr.height) ? prev : curr;
-		}).filter(function(vid_match){
-			return vid_match.videoId === matched_videos.id;
-		});
-
-		//Bookmarks
-		matching_bookmarks = bookmarks.filter(function(video_match){
-			return video_match.id === matched_videos.id;
-		});
-
-		var match_obj = {
-			id: matched_videos,
-			title: matched_videos.title,
-			time: matching_bookmarks.time,
-			boxart: min_boxarts.url
-		};
-
-		return {name: genres.name, videos: [match_obj]};
-  });
 
 }
 
 
-console.log(Ex26()[0].videos);
+console.log(Ex26());
